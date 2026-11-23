@@ -44,7 +44,14 @@ def problems(text):
     return found
 
 
-def main():
+def main(argv):
+    # --check measures the line and writes nothing, so the same code proves the
+    # entry on a machine without /output before the harness ever runs it.
+    if "--check" in argv:
+        bad = problems(LINE)
+        print("invalid: " + "; ".join(bad) if bad else
+              "valid: {} characters, 1 sentence".format(len(LINE)))
+        return 1 if bad else 0
     bad = problems(LINE)
     if bad:
         print("refusing to write: " + "; ".join(bad), file=sys.stderr)
@@ -59,4 +66,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))
